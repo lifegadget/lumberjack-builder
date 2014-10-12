@@ -1,0 +1,36 @@
+#!/bin/bash
+
+if [ -z "$LUMBERJACK_VERSION" ]; then
+	LUMBERJACK_VERSION=`cat /app/lumberjack-version.txt`
+fi
+
+case "$1" in
+	version)
+		echo "";
+		echo "Lumberjack/logstash-forwarder version: ${LUMBERJACK_VERSION}"
+		echo ""; 	
+	;;
+	about)
+		echo "";
+		echo "Lumberjack Builder";
+		echo "------------------"
+		echo "Syntax: 'sudo docker run lifegadget/lumberjack-builder > lumberjack_${LUMBERJACK_VERSION}_amd64.deb'";
+		echo "";
+		echo "Builds a Debian package for the logstash-forwarder and sends to standard out. If you want to specify an particular ";
+		echo "version of lumberjack you can include an environment variable called LUMBERJACK_VERSION."
+		echo "";
+	;;
+	build)
+		if [ ! -f /app/src/logstash-forwarder-${LUMBERJACK_VERSION}.zip ]; then
+			wget -O/app/src/logstash-forwarder-${LUMBERJACK_VERSION}.zip https://github.com/elasticsearch/logstash-forwarder/archive/v${LUMBERJACK_VERSION}.zip
+		fi
+		cd /app/src
+		unzip logstash-forwarder-${LUMBERJACK_VERSION}.zip
+		cd /app/src/logstash-forwarder-${LUMBERJACK_VERSION}
+		umask 022
+		make deb
+		# Send file out on stdout
+		cp lumberjack_${LUMBERJACK_VERSION}_amd64.deb /app/bin
+		cat lumberjack_${LUMBERJACK_VERSION}_amd64.deb 
+	;;
+esac
