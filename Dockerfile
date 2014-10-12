@@ -10,7 +10,7 @@ RUN apt-get update \
 	
 RUN mkdir -p /app \
 	&& mkdir -p /app/src \
-	&& mkdir -p /app/bin
+	&& mkdir -p /app/bin \
 	&& wget -O/app/src/logstash-forwarder-${LUMBERJACK_VERSION}.zip https://github.com/elasticsearch/logstash-forwarder/archive/v${LUMBERJACK_VERSION}.zip \
 	&& echo ${LUMBERJACK_VERSION} > /app/lumberjack-version.txt	
 	

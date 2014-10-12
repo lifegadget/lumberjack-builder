@@ -31,6 +31,8 @@ case "$1" in
 		make deb
 		# Send file out on stdout
 		cp lumberjack_${LUMBERJACK_VERSION}_amd64.deb /app/bin
-		cat lumberjack_${LUMBERJACK_VERSION}_amd64.deb 
+		echo "";
+		echo "Built Debian DEB file called 'lumberjack_${LUMBERJACK_VERSION}_amd64.deb'."
+		echo "";
 	;;
 esac
