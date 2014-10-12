@@ -1,4 +1,4 @@
-#Logstash Forwarder
+#Lumberjack Builder
 > a [docker](http://docker.io) image to build Ubuntu .deb images of the [Logstash Forwarder](https://github.com/elasticsearch/logstash-forwarder) (formally Lumberjack)
 
 ## Introduction
