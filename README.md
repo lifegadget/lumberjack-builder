@@ -13,7 +13,7 @@ The docker container exposes `/app/bin` which is where the built deb file will b
 
 	sudo docker run -e STDOUT=true lifegadget/lumberjack-builder > lumberjack_0.3.1_amd64.deb
 	
-> note: in this case you can choose any filename you like, there are no restrictions ... right now this STDOUT solution is getting mildly poluted with outputs from other commands so best to use the volume sharing
+> note: in this case you can choose any filename you like, there are no restrictions
 
 ## Pre-built Images
 
