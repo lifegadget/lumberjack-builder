@@ -29,10 +29,17 @@ case "$1" in
 		cd /app/src/logstash-forwarder-${LUMBERJACK_VERSION}
 		umask 022
 		make deb
-		# Send file out on stdout
+		# Add file to the volume share
 		cp lumberjack_${LUMBERJACK_VERSION}_amd64.deb /app/bin
-		echo "";
-		echo "Built Debian DEB file called 'lumberjack_${LUMBERJACK_VERSION}_amd64.deb'."
-		echo "";
+		# Communicate via stdout unless request to output file there
+		if [[ -z "$STDOUT" ]];then
+			# user did not specify wanting on stdout so just report back the filename on share
+			echo "";
+			echo "Built Debian DEB file called 'lumberjack_${LUMBERJACK_VERSION}_amd64.deb'."
+			echo "";
+		else
+			# send to stdout
+			cat /app/bin/lumberjack_${LUMBERJACK_VERSION}_amd64.deb
+		fi
 	;;
 esac
