@@ -5,6 +5,30 @@ if [ -z "$LUMBERJACK_VERSION" ]; then
 fi
 
 case "$1" in
+	build)
+		if [ ! -f /app/src/logstash-forwarder-${LUMBERJACK_VERSION}.zip ]; then
+			wget -O/app/src/logstash-forwarder-${LUMBERJACK_VERSION}.zip https://github.com/elasticsearch/logstash-forwarder/archive/v${LUMBERJACK_VERSION}.zip > output.txt
+		fi
+		cd /app/src
+		unzip logstash-forwarder-${LUMBERJACK_VERSION}.zip >> output.txt 
+		cd /app/src/logstash-forwarder-${LUMBERJACK_VERSION}
+		umask 022
+		make deb >> output.txt
+		# Add file to the volume share
+		cp lumberjack_${LUMBERJACK_VERSION}_amd64.deb /app/bin
+		cp output.txt /app/bin
+		# branch on stdout strategy
+		if [[ -z "$STDOUT" ]];then
+			# report progress to user on stdout
+			cat output.txt;
+			echo "";
+			echo "Built Debian DEB file called 'lumberjack_${LUMBERJACK_VERSION}_amd64.deb'. You can find this file in the volume share you setup."
+			echo "";
+		else
+			# send file to stdout
+			cat /app/bin/lumberjack_${LUMBERJACK_VERSION}_amd64.deb
+		fi
+	;;
 	version)
 		echo "";
 		echo "Lumberjack/logstash-forwarder version: ${LUMBERJACK_VERSION}"
@@ -19,27 +43,5 @@ case "$1" in
 		echo "Builds a Debian package for the logstash-forwarder and sends to standard out. If you want to specify an particular ";
 		echo "version of lumberjack you can include an environment variable called LUMBERJACK_VERSION."
 		echo "";
-	;;
-	build)
-		if [ ! -f /app/src/logstash-forwarder-${LUMBERJACK_VERSION}.zip ]; then
-			wget -O/app/src/logstash-forwarder-${LUMBERJACK_VERSION}.zip https://github.com/elasticsearch/logstash-forwarder/archive/v${LUMBERJACK_VERSION}.zip
-		fi
-		cd /app/src
-		unzip logstash-forwarder-${LUMBERJACK_VERSION}.zip
-		cd /app/src/logstash-forwarder-${LUMBERJACK_VERSION}
-		umask 022
-		make deb
-		# Add file to the volume share
-		cp lumberjack_${LUMBERJACK_VERSION}_amd64.deb /app/bin
-		# Communicate via stdout unless request to output file there
-		if [[ -z "$STDOUT" ]];then
-			# user did not specify wanting on stdout so just report back the filename on share
-			echo "";
-			echo "Built Debian DEB file called 'lumberjack_${LUMBERJACK_VERSION}_amd64.deb'."
-			echo "";
-		else
-			# send to stdout
-			cat /app/bin/lumberjack_${LUMBERJACK_VERSION}_amd64.deb
-		fi
 	;;
 esac
