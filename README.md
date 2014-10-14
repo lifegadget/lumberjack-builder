@@ -9,7 +9,11 @@ To build the Logstash Forwarder your environment needs quite a few source depend
 
 	sudo docker run -v /path/to/share:/app/bin lifegadget/lumberjack-builder 
 	
-The docker container exposes `/app/bin` which is where the built deb file will be placed. Just put in the appropriate mount point for your host.
+The docker container exposes `/app/bin` which is where the built deb file will be placed. Just put in the appropriate mount point for your host. If you want to avoid the hassle of having a mounted share point then you can also send the file back via `stdout` with the following command:
+
+	sudo docker run -e STDOUT=true lifegadget/lumberjack-builder > lumberjack_0.3.1_amd64.deb
+	
+> note: in this case you can choose any filename you like, there are no restrictions
 
 ## Pre-built Images
 
